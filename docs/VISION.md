@@ -1,15 +1,17 @@
-# Vision
+# Vision and MVP
 
-SimuBox aims to make scientific ideas easier to investigate through interactive experiments that connect observable behavior with explanations and source code. Its proposed value is a coherent scientific catalogue that can host simulations built with different browser-compatible technologies. Whether this combination offers a distinct advantage remains a hypothesis to validate with users and contributors.
+SimuBox is an open scientific laboratory: visitors discover a phenomenon, change a working model, read its explanation and limitations, and inspect its source. Scientific experimentation, encyclopedic context and open-source discovery belong in one coherent experience. Yahya (`yahyabmo`) contributed the initial conceptual research; differentiation from other platforms is a hypothesis, not a verified market fact.
 
-## Intended experience
+## Audience assumptions
 
-- Discover simulations by scientific topic and relevant metadata.
-- Run experiments in a browser, change parameters, and observe results.
-- Read explanations, equations, limitations, and references alongside each experiment.
-- Inspect the simulation's source repository and its published revision.
-- Eventually submit simulations through a documented contribution process.
+We prioritize students and curious learners who want to see cause and effect, educators who need explainable demonstrations, and developers who want inspectable source. These are product assumptions. No interviews, usage data or validated personas exist yet.
 
-Potential audiences include learners, educators, researchers, and independent developers. Their needs and priorities have not yet been validated.
+## Initial journey
 
-Longer term, SimuBox could become a collaborative, multilingual scientific reference with reusable contribution and review processes. These ambitions do not define the initial MVP.
+Open the landing page → browse or search the catalogue → choose a scientific field → open a detail page → manipulate a playable simulation → read equations, method and limitations → follow the source and attribution. External candidates have source links and clear status, without a player.
+
+## MVP boundary
+
+The working foundation includes static landing, catalogue, search and category filters, reusable detail pages, a Lorenz reference simulation, scientific Markdown, source and license metadata, about and contribution pages, responsive navigation, and loading/error/empty states.
+
+Accounts, authentication, database, social features, comments, voting, browser code editing, arbitrary uploads, automatic third-party execution, payments and a complex backend are non-goals. Future community publishing requires separate security work.

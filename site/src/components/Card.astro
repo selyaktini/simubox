@@ -1,0 +1,5 @@
+---
+import type { Manifest } from '../lib/catalogue';
+const { item } = Astro.props as { item: Manifest };
+---
+<article class="sim-card" data-title={item.title.toLowerCase()} data-category={item.category} data-search={[item.title,item.summary,item.category,...item.tags].join(' ').toLowerCase()}><div class="card-top"><span class="eyebrow">{item.category}</span><span class:list={['status', item.status === 'playable' ? 'status-live' : 'status-candidate']}>{item.status === 'playable' ? 'Playable' : 'External candidate'}</span></div><div class="card-visual" aria-hidden="true"><span>{item.preview.label}</span></div><h3><a href={`/simulations/${item.id}/`}>{item.title}</a></h3><p>{item.summary}</p><div class="tags">{item.tags.map(tag => <span>{tag}</span>)}</div></article>

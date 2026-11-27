@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import { catalogue } from '../../lib/data';
+import { categories } from '../../lib/catalogue';
+---
+<Base title="Simulation catalogue"><section class="shell page-heading"><span class="eyebrow">CATALOGUE / 001</span><h1>Scientific simulations</h1><p>Find an experiment by topic, or search by model, phenomenon, or method. Playable experiments run here; external candidates link to their source.</p></section><section class="shell catalogue"><div class="filters"><label for="search">Search catalogue</label><input id="search" type="search" placeholder="Search simulations, topics, methods…" autocomplete="off"/><label for="category">Scientific field</label><select id="category"><option value="all">All fields</option>{categories.map(category => <option value={category}>{category}</option>)}</select></div><p id="results" role="status" aria-live="polite"></p><div class="card-grid" id="cards">{catalogue.map(item => <Card item={item}/>)}</div><div id="empty" class="empty" hidden><h2>No matching simulations</h2><p>Try a broader search or choose another field.</p><button id="clear" type="button">Clear filters</button></div></section><script>
+  const search = document.querySelector<HTMLInputElement>('#search')!;
+  const category = document.querySelector<HTMLSelectElement>('#category')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('.sim-card')];
+  const results = document.querySelector<HTMLElement>('#results')!;
+  const empty = document.querySelector<HTMLElement>('#empty')!;
+  const initialCategory = new URLSearchParams(location.search).get('category');
+  if (initialCategory && [...category.options].some(option => option.value === initialCategory)) category.value = initialCategory;
+  function update() { const q = search.value.trim().toLocaleLowerCase(); let count = 0; for (const card of cards) { const show = (category.value === 'all' || card.dataset.category === category.value) && (!q || card.dataset.search?.includes(q)); card.hidden = !show; if(show) count++; } results.textContent = `${count} ${count === 1 ? 'simulation' : 'simulations'} found`; empty.hidden = count !== 0; }
+  search.addEventListener('input', update); category.addEventListener('change', update); document.querySelector('#clear')?.addEventListener('click', () => { search.value = ''; category.value = 'all'; update(); search.focus(); }); update();
+</script></Base>

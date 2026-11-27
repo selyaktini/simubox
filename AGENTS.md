@@ -1,32 +1,15 @@
 # Agent instructions
 
-## Project context
+Read this file, README and relevant `docs/` before implementation. The roadmap proposes future work; it is not authorization for later phases.
 
-SimuBox is an early-stage, open-source scientific simulation platform. Read the relevant files in `docs/` and this file before implementation. The roadmap is a proposal, not authorization to implement later phases.
+## Engineering
 
-## Engineering principles
-
-- Prefer small, reviewable changes and simple, accessible browser experiences.
-- Keep simulation-specific code and metadata separate from trusted catalogue code.
-- Avoid dependencies, services, and persistent infrastructure without a clear need and an explicit decision.
-- Preserve attribution and provenance for scientific content and contributed code.
+Prefer small, reviewable, accessible changes. Keep scientific models separate from rendering and from trusted catalogue code. Avoid unnecessary dependencies or infrastructure. Preserve author attribution, scientific references and code provenance. Use manifest YAML as the single source for shared metadata. Add focused tests and update documentation when behavior changes. Record consequential choices in `docs/DECISIONS.md` as Proposed, Accepted, Rejected or Superseded; do not promote proposals without owner authority.
 
 ## Security
 
-- Treat every external simulation repository, manifest, dependency, and build artifact as untrusted input.
-- Isolate external builds; never give untrusted builds deployment credentials or access to trusted infrastructure.
-- Pin source revisions to full commit hashes, verify provenance, and validate manifests and generated artifacts before publication when an integration pipeline is built.
-- Keep catalogue and simulation execution across a deliberate security boundary. Assess origin isolation, iframe permissions, browser messaging, content security policy, and hosting controls together; iframe sandboxing alone is insufficient.
-- Do not publish candidate simulations before checking integration feasibility, license compatibility, and security.
+Treat external repositories, manifests, dependencies and artifacts as untrusted. Do not execute external builds with access to host secrets, home, SSH agent or deployment credentials. Pin full source commits and review licenses, dependencies, build scripts, artifacts and browser behavior before publication. Maintain distinct catalogue, player, external build and credentialed publication trust zones. Opaque iframe sandboxing is one control, not a full security boundary. Never combine `allow-scripts` and `allow-same-origin` for same-origin untrusted content. Do not publish candidate simulations without feasibility, license and security checks.
 
-## Quality and documentation
+## Current boundary
 
-- Add tests appropriate to behavior and risk when implementing code; cover validation and security boundaries with focused tests. Document checks performed and gaps left open.
-- Update relevant documentation when behavior, architecture, or decisions change. Keep claims traceable; do not invent sources or present historical research as current verification.
-- Record consequential choices in `docs/DECISIONS.md` with rationale, alternatives, and one of: Proposed, Accepted, Rejected, Superseded.
-- Distinguish approved decisions from proposals in code, documentation, and reports. Do not silently promote a proposal to Accepted; seek the project owner's decision.
-- Report assumptions, limitations, and trade-offs in implementation summaries.
-
-## Current mission boundary
-
-Documentation foundations only. Do not initialize a framework, install dependencies, add application code or CI/CD, create license files, change remotes, or commit or push for Mission 001.
+Missions 002–005 authorize the initial static platform and original reference simulation. External candidate publication, automatic third-party builds and public deployment remain out of scope. Keep licensing declaration pending the owner's explicit decision. Do not commit or push unless instructed or useful for local review; never push directly to main.

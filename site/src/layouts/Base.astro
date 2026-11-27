@@ -1,0 +1,5 @@
+---
+import '../styles/global.css';
+const { title = 'SimuBox', description = 'An open laboratory for scientific simulation.' } = Astro.props;
+---
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><title>{title} · SimuBox</title></head><body><a class="skip" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="SimuBox home"><span class="brand-mark" aria-hidden="true">⌁</span> SIMUBOX</a><nav aria-label="Main navigation"><a href="/simulations/">Simulations</a><a href="/about/">About</a><a href="/contribute/">Contribute</a></nav></div></header><main id="main"><slot/></main><footer><div class="shell footer-inner"><span>SimuBox · An open scientific laboratory</span><a href="https://github.com/selyaktini/simubox">Source on GitHub ↗</a></div></footer></body></html>
