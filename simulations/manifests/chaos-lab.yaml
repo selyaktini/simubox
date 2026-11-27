@@ -1,0 +1,17 @@
+id: chaos-lab
+title: Chaos Lab — Double Pendulum
+summary: Observe the motion of two coupled pendulum arms and its sensitivity to initial conditions.
+category: Physics
+tags: [Chaos, Mechanics, Numerical methods]
+authors:
+  - name: Yahya
+    url: https://github.com/yahyabmo
+sourceUrl: https://github.com/yahyabmo/the-double-pendulum
+sourceCommit: 1947ade448fc8dd07f21256a3387000e01a2e7af
+license: MIT
+status: candidate
+origin: external
+preview:
+  label: θ₁ · θ₂
+capabilities: [Canvas 2D]
+content: chaos-lab

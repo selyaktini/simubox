@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { catalogue, scientificContent } from '../../lib/data';
+import { marked } from 'marked';
+export function getStaticPaths() { return catalogue.map(item => ({ params: { id: item.id }, props: { item } })); }
+const { item } = Astro.props;
+const html = marked.parse(scientificContent[item.content]);
+const playerUrl = import.meta.env.DEV ? 'http://127.0.0.1:4322/index.html' : item.entryPoint;
+---
+<Base title={item.title} description={item.summary}><div class="shell detail"><a class="back-link" href="/simulations/">← All simulations</a><div class="detail-header"><div><span class="eyebrow">{item.category} / {item.status === 'playable' ? 'PLAYABLE EXPERIMENT' : 'EXTERNAL CANDIDATE'}</span><h1>{item.title}</h1><p class="lead">{item.summary}</p><div class="tags">{item.tags.map((tag: string) => <span>{tag}</span>)}</div></div></div>{item.status === 'playable' ? <section class="player-section" aria-label="Interactive simulation"><div class="player-heading"><div><span class="eyebrow">LIVE EXPERIMENT</span><h2>Experiment workspace</h2></div><button type="button" id="fullscreen">Fullscreen ↗</button></div><div class="player-wrap" id="player-wrap"><div id="loading" class="player-message">Loading simulation…</div><iframe id="player" title={`${item.title} interactive simulation`} src={playerUrl} sandbox="allow-scripts" referrerpolicy="no-referrer" loading="eager"></iframe></div><p id="player-error" class="player-error" role="alert" hidden>Simulation could not load. Check that the simulation service is running, then reload this page.</p><p class="caption">Canvas 2D · Runs in a restricted iframe · Controls are inside the player</p></section> : <section class="candidate-note"><h2>Integration under review</h2><p>This project is listed for discovery. It is not currently playable inside SimuBox. Its source, licensing, build and embedding need review before an artifact can be published here.</p><a class="button" href={item.sourceUrl} target="_blank" rel="noopener noreferrer">Explore source repository ↗</a></section>}<div class="detail-columns"><article class="prose"><span class="eyebrow">SCIENTIFIC NOTES</span><Fragment set:html={html}/></article><aside class="metadata"><h2>Project information</h2><dl><dt>Authors</dt><dd>{item.authors.map((author: {name:string,url?:string}) => author.url ? <a href={author.url}>{author.name}</a> : author.name)}</dd><dt>Source</dt><dd><a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">Repository ↗</a></dd>{item.sourceCommit && <><dt>Source revision</dt><dd><code>{item.sourceCommit}</code></dd></>}<dt>License</dt><dd>{item.license === 'Pending' ? 'Original platform licensing pending owner approval' : item.license}</dd><dt>Browser requirements</dt><dd>{item.capabilities.join(', ')}</dd><dt>Status</dt><dd>{item.status === 'playable' ? 'Playable first-party' : 'External candidate'}</dd></dl></aside></div></div><script>
+ const frame = document.querySelector<HTMLIFrameElement>('#player');
+ if (frame) {
+   const loading = document.querySelector<HTMLElement>('#loading')!;
+   const error = document.querySelector<HTMLElement>('#player-error')!;
+   const timer = window.setTimeout(() => { loading.hidden = true; error.hidden = false; }, 10000);
+   window.addEventListener('message', event => {
+     if (event.source !== frame.contentWindow || event.origin !== 'null') return;
+     if (event.data?.type !== 'simubox:ready' || event.data?.id !== 'lorenz-attractor') return;
+     clearTimeout(timer); loading.hidden = true; error.hidden = true;
+   });
+   frame.addEventListener('error', () => { clearTimeout(timer); loading.hidden = true; error.hidden = false; });
+   document.querySelector('#fullscreen')?.addEventListener('click', () => document.querySelector<HTMLElement>('#player-wrap')?.requestFullscreen?.());
+ }
+</script></Base>

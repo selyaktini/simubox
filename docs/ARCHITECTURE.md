@@ -1,31 +1,16 @@
-# Preliminary architecture
+# Architecture
 
-All choices here are proposals. See [the decision register](DECISIONS.md) for status; no platform stack or hosting model is approved.
+Status: accepted for the current bootstrap under the owner's delegated technical authority. Public deployment remains unapproved.
 
-## Proposed components
+## Components
 
-| Component | Possible responsibility |
-| --- | --- |
-| Catalogue | Static pages for discovery, simulation descriptions, explanations, equations, references, and source links. Astro and TypeScript are candidates. |
-| Content and metadata | Markdown explanations and validated YAML manifests describing identity, topics, provenance, source revision, build artifact, and integration settings. English could be the first public language. |
-| Simulation repositories | Independently maintained source repositories producing static, browser-compatible builds; published versions could be pinned to full Git commit hashes. |
-| Integration pipeline | Fetch and build pinned revisions in isolation, validate metadata and artifacts, and publish approved outputs. GitHub Actions is a candidate, not a security boundary by itself. |
-| Hosting | Serve the trusted catalogue and untrusted simulation artifacts from separate origins; Cloudflare Pages is one candidate. |
+- `site/`: Astro 7 static site, CSS tokens, reusable pages and client-side catalogue filtering. The catalogue imports validated YAML; scientific Markdown supplies prose only, avoiding duplicate metadata.
+- `simulations/manifests/`: the authoritative catalogue metadata. `simulations/lorenz/`: original TypeScript model and Canvas renderer. esbuild emits a classic-script static bundle into `site/public/lab/`.
+- `scripts/validate.ts`: rejects malformed manifests, duplicate IDs and missing notes/entry points. `scripts/serve-sim.mjs`: separate local origin for the first-party player during development.
+- `tests/`: Vitest model/schema tests and Playwright end-to-end tests.
 
-An initial MVP could use pull requests for review and avoid a database, authentication, and backend. This would constrain publishing to maintainers and reviewed contributors until a later contribution model is designed.
+## Execution boundary
 
-## Trust boundaries
+The trusted catalogue is at `127.0.0.1:4321` in development. The first-party player is at `127.0.0.1:4322` and runs in an iframe with `sandbox="allow-scripts"`, yielding an opaque origin. The production static build carries the first-party artifact under `/lab/` but retains the opaque iframe origin. This is suitable for the reviewed first-party example, not a future external publication arrangement. Future external artifacts require a distinct registered origin and restrictive response headers, with credential-free build and separate publication jobs. A one-way first-party ready signal clears the loading state; the catalogue verifies frame window, opaque origin, type and ID.
 
-The catalogue is trusted application content. External simulation source, dependencies, manifests, and generated files are untrusted. Builds must run without deployment secrets and with restricted credentials, network, and filesystem access. Review and validation must occur before artifacts cross into publication. A full commit hash identifies source but does not by itself make a build reproducible; build tooling and dependencies also need pinning or equivalent controls.
-
-Published simulations should run on an origin separate from the catalogue, within a restrictive iframe and explicit permissions. Define and validate any cross-frame messages. Assess content security policy, permissions policy, storage and cookie behavior, navigation, resource limits, and artifact serving rules. Neither origin separation nor iframe sandboxing alone addresses build-time compromise or all browser risks.
-
-## Questions to resolve
-
-- Which user and contributor workflows should the first MVP support?
-- Can the two candidate simulations be built as static browser artifacts, and under which licenses?
-- What exact manifest schema, versioning, artifact checks, and review rules are needed?
-- How will isolated builds be reproducible and kept separate from publishing credentials?
-- What iframe capabilities and cross-frame communication do simulations actually need?
-- Which hosting setup reliably provides separate origins and the required security headers?
-- When, if ever, are backend services, accounts, and direct submissions justified?
+Classic script bundling avoids module-fetch CORS failure under an opaque sandbox origin. It does not establish compatibility for external apps that rely on module workers, storage, downloads or same-origin APIs. See SECURITY and FEASIBILITY.

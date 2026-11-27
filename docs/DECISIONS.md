@@ -1,18 +1,18 @@
 # Decision register
 
-Statuses: **Proposed** (under consideration), **Accepted** (approved), **Rejected** (declined), **Superseded** (replaced by a later decision). The entries below are all proposals from the initial concept, not project owner approvals. Record the owner, date, and replacement ID when a status changes.
+The owner delegated ordinary reversible technical decisions for Missions 002–005. Accepted means accepted for this bootstrap, not a public deployment authorization. Proposed items need further verification or owner action.
 
-| ID | Description | Rationale | Alternatives | Status |
+| ID | Choice | Rationale and evidence | Alternatives / trade-off | Status |
 | --- | --- | --- | --- | --- |
-| D-001 | Use Astro and TypeScript for a static catalogue. | Could support content-oriented pages with limited runtime infrastructure. | Another static generator; plain HTML; a different typed stack. | Proposed |
-| D-002 | Start public content in English; write scientific explanations in Markdown. | One initial language and portable text may simplify editorial work. | Multilingual launch; structured content system. | Proposed |
-| D-003 | Describe simulations with validated YAML manifests. | Human-readable metadata could support a catalogue and integration checks. | JSON; TOML; metadata in code. | Proposed |
-| D-004 | Keep simulation source in independent GitHub repositories and pin published revisions to full commit hashes. | Separates ownership and identifies the source used for a release. | Monorepo; packaged submissions; signed release artifacts. | Proposed |
-| D-005 | Require static browser-compatible simulation builds. | Could enable browser playback without a simulation backend. | Server-hosted simulations; container sessions; compiled packages. | Proposed |
-| D-006 | Serve catalogue and simulations from separate origins using restricted iframes. | Limits direct access from untrusted simulation code to catalogue context. | Same-origin embedding; reviewed code bundled into catalogue; separate application windows. | Proposed |
-| D-007 | Use GitHub Actions for integration CI/CD, with isolated untrusted builds and separate credentialed publishing. | May fit a pull-request workflow, subject to a verified security design. | Dedicated isolated build service; manual builds; another CI provider. | Proposed |
-| D-008 | Consider Cloudflare Pages for hosting. | Candidate for static delivery; origin and header requirements need verification. | Other static hosts; self-hosting. | Proposed |
-| D-009 | Begin with pull-request contributions and no database, authentication, or backend. | Keeps the first workflow small and reviewable. | Submission service and accounts from launch. | Proposed |
-| D-010 | Consider MIT for original platform code and CC BY 4.0 for original scientific content. | Distinguishes software and educational content licensing. | Other permissive or copyleft licenses; a single license where appropriate. | Proposed |
-
-Before any candidate simulation is imported or published, verify its license, dependencies, technical compatibility, and permitted attribution. Candidate repositories: [Mandelbrot Odyssey](https://github.com/yahyabmo/the-mandelbrot-set) and [Chaos Lab — Double Pendulum](https://github.com/yahyabmo/the-double-pendulum). Their suitability is unresolved.
+| D-001 | Astro 7 + strict TypeScript static catalogue | Seven static pages build from manifests; no application server needed. | Plain HTML would need more generation code. | Accepted |
+| D-002 | English content and Markdown notes | Portable prose with a single initial language. No user research validates language preference. | Localization later. | Accepted |
+| D-003 | Validated YAML manifests | Zod schema and tests reject malformed/unsafe entries; metadata has one owner. | JSON is stricter but less editorial. | Accepted |
+| D-004 | Independent external source repositories pinned to full commits | Candidate HEADs were resolved to full SHAs; publication requires further provenance checks. | Monorepo would couple releases. | Accepted |
+| D-005 | Static browser apps | First-party Lorenz app builds as a static artifact. | Server execution expands security and cost. | Accepted |
+| D-006 | Restricted iframe and separate origins for external apps | First-party dev uses separate port and opaque iframe. External origin and headers require deployment validation. | Same-origin unrestricted embedding is unsafe. | Accepted |
+| D-007 | GitHub Actions for trusted CI only | CI runs checks without secrets. Untrusted external build pipeline remains unimplemented. | Dedicated build service later. | Superseded by D-011 for bootstrap |
+| D-008 | Cloudflare Pages as hosting candidate | No hosting experiment or deployment authorization yet. | Other static hosts may meet header/origin needs. | Proposed |
+| D-009 | Reviewed pull requests, no backend/accounts | Static contribution path meets MVP with smaller attack surface. | Direct submission requires authentication and moderation. | Accepted |
+| D-010 | Recommend MIT code and CC BY 4.0 original educational content | Clear split for future licensing; copyright owner must approve. | Other licenses possible. | Proposed |
+| D-011 | Trusted platform CI only; no external builds | GitHub Actions workflow uses read-only token and platform checks. | Automated external pipeline deferred. | Accepted |
+| D-012 | First-party classic-script bundle in opaque iframe | Browser can load script without module CORS under opaque origin; preserves model/rendering split. | Module worker architecture would require distinct-origin review. | Accepted |

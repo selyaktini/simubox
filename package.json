@@ -1,0 +1,38 @@
+{
+  "name": "simubox",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "npm run build:sim && concurrently -k \"cd site && astro dev --ignore-lock --host 127.0.0.1 --port 4321\" \"node scripts/serve-sim.mjs\"",
+    "build:sim": "node scripts/build-sim.mjs",
+    "build": "npm run validate && npm run build:sim && astro build --root site",
+    "preview": "cd site && astro preview --ignore-lock --host 127.0.0.1 --port 4321",
+    "check": "astro check --root site && tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "validate": "node --import tsx scripts/validate.ts"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.7",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^22.20.7",
+    "concurrently": "^9.2.5",
+    "esbuild": "^0.28.2",
+    "eslint": "^9.39.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.2"
+  },
+  "dependencies": {
+    "astro": "^7.4.13",
+    "marked": "^16.4.2",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  }
+}

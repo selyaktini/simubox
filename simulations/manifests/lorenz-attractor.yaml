@@ -1,0 +1,16 @@
+id: lorenz-attractor
+title: Lorenz Attractor
+summary: Explore how a deterministic three-variable system can produce sensitive, nonperiodic motion.
+category: Dynamical systems
+tags: [Chaos, Differential equations, Numerical methods]
+authors:
+  - name: SimuBox contributors
+sourceUrl: https://github.com/selyaktini/simubox
+license: Pending
+status: playable
+origin: first-party
+entryPoint: /lab/index.html
+preview:
+  label: ∂x/∂t
+capabilities: [Canvas 2D]
+content: lorenz-attractor

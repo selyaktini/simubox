@@ -1,0 +1,17 @@
+id: mandelbrot-odyssey
+title: Mandelbrot Odyssey
+summary: Investigate the boundary of the Mandelbrot set through repeated iteration of complex numbers.
+category: Mathematics
+tags: [Fractals, Complex numbers]
+authors:
+  - name: Yahya
+    url: https://github.com/yahyabmo
+sourceUrl: https://github.com/yahyabmo/the-mandelbrot-set
+sourceCommit: 4bb036e3edc7e86ba54f959637c7a76cd48ec3bb
+license: MIT
+status: candidate
+origin: external
+preview:
+  label: z² + c
+capabilities: [WebGL2]
+content: mandelbrot-odyssey
