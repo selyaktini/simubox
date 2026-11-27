@@ -12,6 +12,9 @@ license: MIT
 status: candidate
 origin: external
 preview:
+  image: /previews/mandelbrot.png
+  caption: Escape-time computation · 80 iterations
+  alt: Computed escape-time view of the Mandelbrot set.
   label: z² + c
 capabilities: [WebGL2]
 content: mandelbrot-odyssey

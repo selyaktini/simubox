@@ -12,4 +12,4 @@ Treat external repositories, manifests, dependencies and artifacts as untrusted.
 
 ## Current boundary
 
-Missions 002–005 authorize the initial static platform and original reference simulation. External candidate publication, automatic third-party builds and public deployment remain out of scope. Keep licensing declaration pending the owner's explicit decision. Do not commit or push unless instructed or useful for local review; never push directly to main.
+Missions 002–005 and Mission 007 authorize the initial static platform, original reference simulation and Scientific Atlas frontend redesign. External candidate publication, automatic third-party builds and public deployment remain out of scope. Keep licensing declaration pending the owner's explicit decision. Do not commit or push unless instructed or useful for local review; never push directly to main.

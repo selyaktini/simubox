@@ -5,6 +5,7 @@ const items = await Promise.all(files.map(async file => parseManifest(await read
 const contentNames = new Set((await readdir('site/src/content')).filter(x => x.endsWith('.md')).map(x => x.slice(0, -3)));
 validateCatalogue(items, contentNames);
 for (const item of items) {
+  try { await access(`site/public${item.preview.image}`); } catch { throw new Error(`${item.id}: missing preview ${item.preview.image}`); }
   if (item.origin === 'first-party') {
     try { await access(`site/public${item.entryPoint}`); } catch { throw new Error(`${item.id}: missing entry point ${item.entryPoint}`); }
   }

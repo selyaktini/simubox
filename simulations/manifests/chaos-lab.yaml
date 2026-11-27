@@ -12,6 +12,9 @@ license: MIT
 status: candidate
 origin: external
 preview:
+  image: /previews/pendulum.svg
+  caption: Fixed geometric configuration
+  alt: Geometric configuration diagram of a double pendulum.
   label: θ₁ · θ₂
 capabilities: [Canvas 2D]
 content: chaos-lab

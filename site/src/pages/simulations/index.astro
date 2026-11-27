@@ -3,15 +3,43 @@ import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import { catalogue } from '../../lib/data';
 import { categories } from '../../lib/catalogue';
+
+const ordered = [...catalogue].sort((a, b) => Number(b.status === 'playable') - Number(a.status === 'playable'));
+const availableCategories = categories.filter(category => catalogue.some(item => item.category === category));
+const topics = [...new Set(catalogue.flatMap(item => item.tags))].sort((a, b) => a.localeCompare(b));
 ---
-<Base title="Simulation catalogue"><section class="shell page-heading"><span class="eyebrow">CATALOGUE / 001</span><h1>Scientific simulations</h1><p>Find an experiment by topic, or search by model, phenomenon, or method. Playable experiments run here; external candidates link to their source.</p></section><section class="shell catalogue"><div class="filters"><label for="search">Search catalogue</label><input id="search" type="search" placeholder="Search simulations, topics, methods…" autocomplete="off"/><label for="category">Scientific field</label><select id="category"><option value="all">All fields</option>{categories.map(category => <option value={category}>{category}</option>)}</select></div><p id="results" role="status" aria-live="polite"></p><div class="card-grid" id="cards">{catalogue.map(item => <Card item={item}/>)}</div><div id="empty" class="empty" hidden><h2>No matching simulations</h2><p>Try a broader search or choose another field.</p><button id="clear" type="button">Clear filters</button></div></section><script>
-  const search = document.querySelector<HTMLInputElement>('#search')!;
-  const category = document.querySelector<HTMLSelectElement>('#category')!;
-  const cards = [...document.querySelectorAll<HTMLElement>('.sim-card')];
-  const results = document.querySelector<HTMLElement>('#results')!;
-  const empty = document.querySelector<HTMLElement>('#empty')!;
-  const initialCategory = new URLSearchParams(location.search).get('category');
-  if (initialCategory && [...category.options].some(option => option.value === initialCategory)) category.value = initialCategory;
-  function update() { const q = search.value.trim().toLocaleLowerCase(); let count = 0; for (const card of cards) { const show = (category.value === 'all' || card.dataset.category === category.value) && (!q || card.dataset.search?.includes(q)); card.hidden = !show; if(show) count++; } results.textContent = `${count} ${count === 1 ? 'simulation' : 'simulations'} found`; empty.hidden = count !== 0; }
-  search.addEventListener('input', update); category.addEventListener('change', update); document.querySelector('#clear')?.addEventListener('click', () => { search.value = ''; category.value = 'all'; update(); search.focus(); }); update();
-</script></Base>
+<Base title="Explore the collection" description="Search and filter scientific simulations by field, topic and playability.">
+  <section class="site-shell explore-heading">
+    <p class="section-index">ATLAS / COLLECTION</p>
+    <h1>Explore the collection</h1>
+    <p>Models to run, study and inspect. External candidates are indexed for discovery while their integration is reviewed.</p>
+  </section>
+
+  <div class="site-shell explore-layout">
+    <aside class="filter-index" aria-label="Collection filters">
+      <div class="filter-index-head"><span>FIELD INDEX</span><span>{String(availableCategories.length).padStart(2, '0')}</span></div>
+      <div class="field-buttons" role="group" aria-label="Scientific field">
+        <button type="button" data-field="all" aria-pressed="true">All fields <span>{String(catalogue.length).padStart(2, '0')}</span></button>
+        {availableCategories.map(category => (
+          <button type="button" data-field={category} aria-pressed="false">{category}<span>{String(catalogue.filter(item => item.category === category).length).padStart(2, '0')}</span></button>
+        ))}
+      </div>
+      <p class="filter-index-note">Catalogue entries are reviewed individually. “Candidate” means the project is linked, not playable here.</p>
+    </aside>
+
+    <section class="explore-results" aria-label="Simulation results">
+      <div class="search-panel">
+        <label for="search">SEARCH THE ATLAS</label>
+        <div class="search-control"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Model, topic, author, equation…" autocomplete="off" /><kbd>/</kbd></div>
+        <div class="filter-selects">
+          <div><label for="topic">TOPIC</label><select id="topic"><option value="all">All topics</option>{topics.map(topic => <option value={topic}>{topic}</option>)}</select></div>
+          <div><label for="status-filter">AVAILABILITY</label><select id="status-filter"><option value="all">All statuses</option><option value="playable">Playable here</option><option value="candidate">External candidates</option></select></div>
+        </div>
+      </div>
+      <div class="results-line"><p id="results" role="status" aria-live="polite"></p><button type="button" id="clear-filters" hidden>Reset filters</button></div>
+      <div class="collection-list" id="cards">{ordered.map((item, index) => <Card item={item} index={index} headingLevel={2} />)}</div>
+      <div id="empty" class="empty-state" hidden><h2>No matching models</h2><p>Try another scientific term or reset the filters.</p><button type="button" id="empty-reset">Show all experiments <span aria-hidden="true">↗</span></button></div>
+    </section>
+  </div>
+  <script src="../../lib/explore.ts"></script>
+</Base>

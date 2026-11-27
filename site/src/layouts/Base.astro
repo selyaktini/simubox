@@ -1,5 +1,55 @@
 ---
+import '@fontsource-variable/fraunces/wght.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import 'katex/dist/katex.min.css';
 import '../styles/global.css';
-const { title = 'SimuBox', description = 'An open laboratory for scientific simulation.' } = Astro.props;
+
+const {
+  title = 'An atlas of scientific experiments',
+  description = 'Explore scientific models, change their parameters, and inspect the source.',
+} = Astro.props;
+const path = Astro.url.pathname;
+const current = path === '/' ? 'home' : path.startsWith('/simulations/') ? 'explore' : path.startsWith('/about/') ? 'about' : path.startsWith('/contribute/') ? 'contribute' : '';
 ---
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="description" content={description}/><title>{title} · SimuBox</title></head><body><a class="skip" href="#main">Skip to content</a><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="SimuBox home"><span class="brand-mark" aria-hidden="true">⌁</span> SIMUBOX</a><nav aria-label="Main navigation"><a href="/simulations/">Simulations</a><a href="/about/">About</a><a href="/contribute/">Contribute</a></nav></div></header><main id="main"><slot/></main><footer><div class="shell footer-inner"><span>SimuBox · An open scientific laboratory</span><a href="https://github.com/selyaktini/simubox">Source on GitHub ↗</a></div></footer></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0b0f" />
+    <title>{title} · SimuBox</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-shell header-inner">
+        <a class="brand" href="/" aria-current={current === 'home' ? 'page' : undefined}>
+          <svg class="brand-mark" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+            <path d="M4 13V4h9M25 4h9v9M34 25v9h-9M13 34H4v-9" stroke="currentColor" stroke-width="1.5" />
+            <path d="M10 24c5-16 13-14 18-10M10 24c6-9 13-8 18-10M10 24c7-3 13-2 18-10" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span>SIMUBOX</span>
+          <small>SCIENTIFIC ATLAS</small>
+        </a>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <a href="/simulations/" aria-current={current === 'explore' ? 'page' : undefined}>Explore</a>
+          <a href="/about/" aria-current={current === 'about' ? 'page' : undefined}>About</a>
+          <a href="/contribute/" aria-current={current === 'contribute' ? 'page' : undefined}>Contribute</a>
+        </nav>
+        <a class="source-link" href="https://github.com/selyaktini/simubox" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer">
+      <div class="site-shell footer-inner">
+        <div><span class="footer-name">SIMUBOX</span><span>Open scientific experiments and their source.</span></div>
+        <div class="footer-links"><a href="/simulations/">Explore</a><a href="/contribute/">Contribute</a><a href="https://github.com/selyaktini/simubox" target="_blank" rel="noopener noreferrer">Source ↗</a></div>
+      </div>
+      <div class="site-shell footer-note">Initial conceptual research by Yahya (yahyabmo). Original SimuBox licensing is pending owner approval.</div>
+    </footer>
+  </body>
+</html>

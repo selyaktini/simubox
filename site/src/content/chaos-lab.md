@@ -1,10 +1,10 @@
-## Scientific context
+## The physical system
 
-A double pendulum couples two rotating arms through gravity and their shared joint. Its nonlinear equations can produce strong sensitivity to initial angles and velocities. Energy should remain approximately constant in an ideal, undamped numerical model; drift can reveal integration error.
+A double pendulum couples two rotating arms through gravity and their shared joint. Nonlinear dynamics can make nearby starting conditions diverge. The preview is a geometric configuration diagram at $\theta_1=0.72$ rad and $\theta_2=-1.12$ rad, not a measured trajectory or an application screenshot.
 
 ## Integration status
 
-This is an external candidate. Its source is available, but its build artifact and browser embedding have not been approved for SimuBox. Open the source repository to explore the existing project.
+Chaos Lab is an external project by Yahya. Its source is linked here; the application is not playable within SimuBox. The project's numerical model, build artifact and browser behavior need a separate integration review.
 
 ## Reference
 

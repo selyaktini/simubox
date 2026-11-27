@@ -9,7 +9,7 @@ const base = z.object({
   category: z.enum(categories), tags: z.array(z.string().trim().min(2)).min(1), authors: z.array(author).min(1),
   sourceUrl: z.url().startsWith('https://'), sourceCommit: z.string().regex(/^[a-f0-9]{40}$/).optional(),
   license: z.enum(['Pending', 'MIT', 'Apache-2.0', 'BSD-3-Clause', 'GPL-3.0-only', 'CC-BY-4.0']),
-  preview: z.object({ label: z.string().trim().min(1).max(30) }).strict(),
+  preview: z.object({ label: z.string().trim().min(1).max(30), image: z.string().regex(/^\/previews\/[a-z0-9-]+\.(?:svg|png)$/), alt: z.string().trim().min(15), caption: z.string().trim().min(5) }).strict(),
   capabilities: z.array(z.enum(['Canvas 2D', 'WebGL2', 'WebAssembly', 'Workers'])),
   content: z.string().regex(/^[a-z][a-z0-9-]+$/),
 }).strict();
@@ -33,8 +33,4 @@ export function validateCatalogue(items: Manifest[], contentNames: Set<string>):
     if (!contentNames.has(item.content)) throw new Error(`${item.id}: missing scientific content ${item.content}.md`);
     if (item.origin === 'external' && item.status === 'verified') throw new Error(`${item.id}: verified external integration requires a reviewed artifact and hosting configuration; candidate status is required for this bootstrap`);
   }
-}
-export function filterCatalogue(items: Manifest[], query: string, category: string): Manifest[] {
-  const q = query.trim().toLocaleLowerCase();
-  return items.filter(item => (category === 'all' || item.category === category) && (!q || [item.title, item.summary, item.category, ...item.tags].join(' ').toLocaleLowerCase().includes(q)));
 }
