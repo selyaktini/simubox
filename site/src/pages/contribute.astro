@@ -1,4 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Contribute"><section class="shell editorial"><span class="eyebrow">CONTRIBUTE</span><h1>Help make scientific ideas explorable.</h1><p class="lead">Contributions currently arrive through reviewed pull requests to the platform repository.</p><h2>Propose an experiment</h2><p>Open an issue or pull request with the scientific model, intended controls, references, author attribution, source repository and license. Browser-compatible static builds are the target. An external project stays a candidate until its source revision, dependencies, artifact and browser behavior are reviewed.</p><h2>Improve an explanation</h2><p>Clarify assumptions, correct references or improve accessibility in the Markdown scientific notes. Please cite scientific claims and distinguish empirical observations from model results.</p><h2>Review and security</h2><p>Do not submit secrets or executable build commands in manifests. External code is not automatically built or published. See the <a href="https://github.com/selyaktini/simubox/blob/main/docs/SECURITY.md">security model</a> and <a href="https://github.com/selyaktini/simubox">repository</a>.</p></section></Base>
+<Base title="Contribute to SimuBox">
+  <div class="site-shell editorial-page">
+    <div class="editorial-main">
+      <p class="section-index">CONTRIBUTE / REVIEWED WORK</p>
+      <h1>Make a model easier to study.</h1>
+      <p class="editorial-lede">Contributions currently arrive through reviewed issues and pull requests. A clear scientific explanation is as valuable as an implementation.</p>
+      <section><h2>Propose an experiment</h2><p>Describe the model, meaningful controls, assumptions and references. Include author attribution, source URL and license. Browser-compatible static output is the target; external code is not built or published automatically.</p></section>
+      <section><h2>Improve an explanation</h2><p>Clarify the mathematics, numerical method or limitations in a scientific note. Cite claims. Keep manifest metadata in YAML so source, status and attribution have one authoritative record.</p></section>
+      <section><h2>Review boundary</h2><p>External projects stay candidates until their source revision, license notices, dependencies, build artifact and isolated browser behavior are reviewed. Do not put secrets or executable build commands in manifests. See the <a href="https://github.com/selyaktini/simubox/blob/main/docs/SECURITY.md">security model</a>.</p></section>
+    </div>
+    <aside class="editorial-aside"><p class="section-index">SUBMISSION RECORD</p><h2>Include with a proposal</h2><ol><li>Scientific question and model.</li><li>Controls and expected observations.</li><li>Assumptions, limits and references.</li><li>Authors, repository and license.</li></ol><a href="https://github.com/selyaktini/simubox" target="_blank" rel="noopener noreferrer">Open the repository ↗</a></aside>
+  </div>
+</Base>

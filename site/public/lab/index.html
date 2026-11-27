@@ -1,1 +1,43 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lorenz attractor | SimuBox</title><link rel="stylesheet" href="/lab/style.css"></head><body><main><canvas id="plot" aria-label="Live Lorenz attractor trajectory"></canvas><section class="controls" aria-label="Simulation controls"><label>σ <output id="sigma-value">10</output><input id="sigma" type="range" min="0" max="30" value="10" step="0.5"></label><label>ρ <output id="rho-value">28</output><input id="rho" type="range" min="0" max="60" value="28" step="0.5"></label><label>β <output id="beta-value">2.67</output><input id="beta" type="range" min="0.1" max="10" value="2.667" step="0.1"></label><div class="buttons"><button id="toggle" type="button">Pause</button><button id="reset" type="button">Reset</button></div></section><p id="status" role="status">Running · t = 0.0</p></main><script src="/lab/app.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0b0f" />
+    <title>Lorenz system · SimuBox</title>
+    <link rel="stylesheet" href="/lab/style.css" />
+  </head>
+  <body>
+    <div class="instrument" role="region" aria-label="Lorenz system instrument">
+      <div class="instrument-bar">
+        <div><span class="instrument-index">SIMUBOX / 01</span><strong>Lorenz system</strong></div>
+        <div class="transport">
+          <button id="toggle" type="button" aria-keyshortcuts="Space">Pause</button>
+          <button id="reset" type="button" aria-keyshortcuts="R">Reset trajectory</button>
+        </div>
+      </div>
+
+      <div class="plot-region">
+        <canvas id="plot" tabindex="0" role="img" aria-label="Live x and z projection of the Lorenz trajectory; focus this plot for keyboard shortcuts"></canvas>
+        <div class="plot-topline"><span>X–Z PROJECTION</span><span>Δt 0.005 · RK4</span></div>
+        <div class="plot-bottomline"><span id="status" aria-live="off">Running · t = 0.0</span><span>MODEL TIME <output id="time">0.0</output></span></div>
+      </div>
+
+      <section class="control-deck" aria-label="Lorenz parameters">
+        <div class="control-intro"><span>PARAMETERS</span><p>Change one value, then reset to compare paths.</p></div>
+        <div class="sliders">
+          <label for="sigma"><span>σ <small>Sigma</small></span><output id="sigma-value" for="sigma">10.0</output></label>
+          <input id="sigma" type="range" min="0" max="30" value="10" step="0.5" aria-label="Sigma parameter" />
+          <label for="rho"><span>ρ <small>Rho</small></span><output id="rho-value" for="rho">28.0</output></label>
+          <input id="rho" type="range" min="0" max="60" value="28" step="0.5" aria-label="Rho parameter" />
+          <label for="beta"><span>β <small>Beta</small></span><output id="beta-value" for="beta">2.67</output></label>
+          <input id="beta" type="range" min="0.1" max="10" value="2.667" step="0.001" aria-label="Beta parameter" />
+        </div>
+        <div class="presets" role="group" aria-label="Parameter presets"><span>PARAMETER SETS</span><button type="button" data-preset="classical" aria-pressed="true">Classical</button><button type="button" data-preset="steady" aria-pressed="false">Steady</button></div>
+      </section>
+      <p class="instrument-help">Focus the plot: Space pauses or resumes · R resets the trajectory. Presets reset the state and parameters.</p>
+      <p id="announcement" class="sr-only" role="status"></p>
+    </div>
+    <script src="/lab/app.js" defer></script>
+  </body>
+</html>

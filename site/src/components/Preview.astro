@@ -1,0 +1,15 @@
+---
+import type { Manifest } from '../lib/catalogue';
+
+const { item, className = '' } = Astro.props as {
+  item: Manifest;
+  className?: string;
+};
+---
+<figure class:list={['scientific-preview', className]}>
+  <img src={item.preview.image} alt={item.preview.alt} width="720" height="440" loading="lazy" decoding="async" />
+  <figcaption>
+    <span>{item.preview.caption}</span>
+    <span>{item.preview.label}</span>
+  </figcaption>
+</figure>

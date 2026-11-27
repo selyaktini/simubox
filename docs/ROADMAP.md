@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | Mission 001 — documentation foundations | Complete | Initial vision, research summary, preliminary architecture and decisions. |
 | Missions 002–005 — product, feasibility, architecture and bootstrap | In review | Working static site, first-party experiment, validation, tests and documented limitations. |
+| Mission 007 — Scientific Atlas redesign | In review | Authentic previews, editorial pages, responsive workspace and verified filter behavior. |
 | User discovery | Proposed | Interviews or observation of real learners and educators; revise audience assumptions. |
 | Manual external integration | Proposed | License and dependency review, isolated reproducible build, nested-path and iframe tests, artifact validation, separate-origin hosting. |
 | Secure integration pipeline | Proposed | Credential-free untrusted jobs and separate approved publication. |

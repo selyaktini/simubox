@@ -1,20 +1,26 @@
 # SimuBox
 
-An open laboratory for exploring scientific models in a browser. The current working foundation offers a searchable catalogue, scientific notes, source provenance and one original interactive Lorenz attractor simulation. Mandelbrot Odyssey and Chaos Lab are clearly marked external candidates; their code is not loaded by SimuBox.
+An interactive scientific atlas: run a model, change its parameters, read its equations and inspect its source. The static platform currently includes one original, playable Lorenz attractor and two clearly identified external candidates, Mandelbrot Odyssey and Chaos Lab.
 
-The project is in owner review after Missions 002–005. It is not publicly deployed or audited as a production sandbox.
+Mission 007's Scientific Atlas redesign is ready for owner review. The project is not publicly deployed or audited as a production sandbox.
 
-![SimuBox homepage, desktop](docs/screenshots/home-desktop.png)
+### Actual product screenshots
 
-[Mobile homepage](docs/screenshots/home-mobile.png) · [Lorenz experiment](docs/screenshots/lorenz-desktop.png)
+| Desktop | Mobile |
+| --- | --- |
+| [![Home desktop](docs/screenshots/home-desktop.png)](docs/screenshots/home-desktop.png) | [![Home mobile](docs/screenshots/home-mobile.png)](docs/screenshots/home-mobile.png) |
+| [![Explore desktop](docs/screenshots/explore-desktop.png)](docs/screenshots/explore-desktop.png) | [![Explore mobile](docs/screenshots/explore-mobile.png)](docs/screenshots/explore-mobile.png) |
+| [![Lorenz workspace desktop](docs/screenshots/simulation-desktop.png)](docs/screenshots/simulation-desktop.png) | [![Lorenz workspace mobile](docs/screenshots/simulation-mobile.png)](docs/screenshots/simulation-mobile.png) |
+
+The [external candidate detail](docs/screenshots/candidate-desktop.png) shows the source-only state. Screenshots were captured from the built application.
 
 ## Features
 
-- Static Astro catalogue with scientific fields, live search, filtering, result count and empty state.
-- Reusable simulation pages with model explanation, limitations, references, source, authors and license status.
-- TypeScript Lorenz model integrated with fixed-step RK4, Canvas 2D trajectory, parameter controls, pause/resume, reset and fullscreen player.
+- Static Astro catalogue with authentic model previews, field, topic and availability filters, live search, shareable query state, result count and empty state.
+- Reusable scientific pages with typeset equations, model explanation, limitations, references, source, authors and license status.
+- TypeScript Lorenz model integrated with fixed-step RK4, Canvas 2D trajectory, parameter sets, pause/resume, reset, keyboard shortcuts and fullscreen player.
 - Restricted iframe with an opaque origin; separate local player origin during development.
-- YAML manifest validation, unit tests, browser tests and trusted CI.
+- YAML manifest validation, deterministic preview generation, unit tests, browser and accessibility checks, and trusted CI.
 
 ## Requirements and launch
 
@@ -33,6 +39,7 @@ Open **http://127.0.0.1:4321**. The first-party simulation is served at **http:/
 | --- | --- |
 | `npm run dev` | Build the reference simulation and start site plus separate player origin. |
 | `npm run validate` | Check manifests, duplicate IDs, content and entry points. |
+| `npm run generate:previews` | Regenerate deterministic scientific preview assets. |
 | `npm run check` | Astro and TypeScript diagnostics. |
 | `npm run lint` | ESLint. |
 | `npm run test` | Focused Vitest unit tests. |
@@ -42,7 +49,7 @@ Open **http://127.0.0.1:4321**. The first-party simulation is served at **http:/
 
 ## Structure
 
-`site/` holds Astro pages, styles and scientific Markdown. `simulations/manifests/` is the authoritative metadata; `simulations/lorenz/` separates numerical model from rendering. `scripts/` builds the first-party asset and validates metadata. `tests/` contains unit and browser checks. `docs/` records product scope, feasibility, architecture, security and decisions.
+`site/` holds Astro pages, components, design tokens and scientific Markdown. `simulations/manifests/` is the authoritative metadata; `simulations/lorenz/` separates the numerical model, renderer and controls. `scripts/` builds the first-party asset, generates previews and validates metadata. `tests/` contains unit and browser checks. `docs/` records the [design system](docs/DESIGN_SYSTEM.md), product scope, feasibility, architecture, security and decisions. Fontsource self-hosts Fraunces and IBM Plex families; KaTeX typesets equations at build time; Axe checks page accessibility in browser tests.
 
 ## Contributing and security
 
@@ -50,7 +57,7 @@ Open an issue or reviewed pull request with a scientific description, references
 
 ## Limitations and roadmap
 
-Only the first-party Lorenz simulation plays inside SimuBox. External candidates need isolated build and nested-path/iframe testing, artifact validation and separate-origin hosting before integration. The production static output needs host-configured CSP and permissions headers before public deployment. User needs are assumptions pending research. See [roadmap](docs/ROADMAP.md).
+Only the first-party Lorenz simulation plays inside SimuBox. The two external candidates built in a disposable environment but failed the current opaque-origin iframe's module loading; they need further integration review and separate-origin hosting. The production static output needs host-configured CSP and permissions headers before public deployment. User needs are assumptions pending research. See [feasibility](docs/FEASIBILITY.md) and [roadmap](docs/ROADMAP.md).
 
 ## Attribution and licensing
 

@@ -1,35 +1,107 @@
 import { defaults, initial, step, validParameters, type State, type Parameters } from './model';
+import { renderTrajectory } from './render';
+
 const canvas = document.querySelector<HTMLCanvasElement>('#plot');
 const status = document.querySelector<HTMLElement>('#status');
+const timeOutput = document.querySelector<HTMLOutputElement>('#time');
+const announcement = document.querySelector<HTMLElement>('#announcement');
 const toggle = document.querySelector<HTMLButtonElement>('#toggle');
 const reset = document.querySelector<HTMLButtonElement>('#reset');
-if (!canvas || !status || !toggle || !reset) throw new Error('Simulation controls are missing');
+
+if (!canvas || !status || !timeOutput || !announcement || !toggle || !reset) throw new Error('Lorenz instrument controls are missing');
 const context = canvas.getContext('2d');
-if (!context) { status.textContent = 'Canvas 2D is unavailable in this browser.'; toggle.disabled = true; reset.disabled = true; }
-else {
-  let parameters: Parameters = { ...defaults }, state: State = { ...initial }, points: State[] = [], running = true, time = 0;
-  const controls = ['sigma','rho','beta'] as const;
+if (!context) {
+  status.textContent = 'Canvas 2D is unavailable in this browser.';
+  announcement.textContent = status.textContent;
+  toggle.disabled = true;
+  reset.disabled = true;
+} else {
+  let parameters: Parameters = { ...defaults };
+  let state: State = { ...initial };
+  let points: State[] = [];
+  let running = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let time = 0;
+  let lastReadout = 0;
+
+  const controls = ['sigma', 'rho', 'beta'] as const;
+  const inputs = Object.fromEntries(controls.map(key => [key, document.querySelector<HTMLInputElement>(`#${key}`)!])) as Record<typeof controls[number], HTMLInputElement>;
+  const outputs = Object.fromEntries(controls.map(key => [key, document.querySelector<HTMLOutputElement>(`#${key}-value`)!])) as Record<typeof controls[number], HTMLOutputElement>;
+  const presets = [...document.querySelectorAll<HTMLButtonElement>('[data-preset]')];
+
+  function updateReadout() {
+    status!.textContent = `${running ? 'Running' : 'Paused'} · t = ${time.toFixed(1)}`;
+    timeOutput!.value = time.toFixed(1);
+  }
+  function resetTrajectory() {
+    state = { ...initial };
+    points = [];
+    time = 0;
+    updateReadout();
+    announcement!.textContent = 'Trajectory reset to the initial state.';
+  }
+  function setRunning(value: boolean) {
+    running = value;
+    toggle!.textContent = running ? 'Pause' : 'Resume';
+    updateReadout();
+    announcement!.textContent = running ? 'Simulation running.' : 'Simulation paused.';
+  }
+  function applyParameters(next: Parameters, presetName?: string) {
+    if (!validParameters(next)) return;
+    parameters = next;
+    for (const key of controls) {
+      inputs[key].value = String(next[key]);
+      outputs[key].value = next[key].toFixed(key === 'beta' ? 2 : 1);
+    }
+    for (const button of presets) button.setAttribute('aria-pressed', String(button.dataset.preset === presetName));
+  }
+
   for (const key of controls) {
-    const input = document.querySelector<HTMLInputElement>(`#${key}`)!;
-    const output = document.querySelector<HTMLOutputElement>(`#${key}-value`)!;
-    input.addEventListener('input', () => { const candidate = { ...parameters, [key]: Number(input.value) }; if (validParameters(candidate)) { parameters = candidate; output.value = Number(input.value).toFixed(key === 'beta' ? 2 : 1); } });
+    inputs[key].addEventListener('input', () => {
+      applyParameters({ ...parameters, [key]: Number(inputs[key].value) });
+      announcement!.textContent = `${key} ${outputs[key].value}`;
+    });
   }
-  toggle.addEventListener('click', () => { running = !running; toggle.textContent = running ? 'Pause' : 'Resume'; status.textContent = `${running ? 'Running' : 'Paused'} · t = ${time.toFixed(1)}`; });
-  reset.addEventListener('click', () => { state = { ...initial }; points = []; time = 0; status.textContent = `${running ? 'Running' : 'Paused'} · t = 0.0`; });
-  function draw() {
-    const width = canvas!.clientWidth, height = canvas!.clientHeight, ratio = Math.min(devicePixelRatio || 1, 2);
-    if (canvas!.width !== width*ratio || canvas!.height !== height*ratio) { canvas!.width = width*ratio; canvas!.height = height*ratio; }
-    context!.setTransform(ratio,0,0,ratio,0,0);
-    context!.fillStyle = '#091216'; context!.fillRect(0,0,width,height);
-    context!.strokeStyle = '#234047'; context!.lineWidth = 1;
-    for (let i=1;i<4;i++){context!.beginPath();context!.moveTo(0,height*i/4);context!.lineTo(width,height*i/4);context!.stroke();}
-    context!.strokeStyle = '#70e0d4'; context!.lineWidth = 1.3; context!.beginPath();
-    points.forEach((p,i)=>{ const x=width/2 + p.x*width/55, y=height*.88-p.z*height/57; if(i===0)context!.moveTo(x,y);else context!.lineTo(x,y); }); context!.stroke();
+  toggle.addEventListener('click', () => setRunning(!running));
+  reset.addEventListener('click', resetTrajectory);
+  for (const button of presets) button.addEventListener('click', () => {
+    const next = button.dataset.preset === 'steady' ? { ...defaults, rho: 12 } : { ...defaults };
+    applyParameters(next, button.dataset.preset);
+    resetTrajectory();
+    announcement!.textContent = `${button.textContent} preset selected. Trajectory reset.`;
+  });
+  window.addEventListener('keydown', event => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const target = event.target as HTMLElement;
+    if (target.matches('input, button, select, textarea, [contenteditable="true"]')) return;
+    if (event.code === 'Space') { event.preventDefault(); setRunning(!running); }
+    if (event.key.toLowerCase() === 'r') { event.preventDefault(); resetTrajectory(); }
+  });
+
+  function frame(now: number) {
+    if (!document.hidden && running) {
+      for (let index = 0; index < 8; index++) {
+        state = step(state, parameters);
+        if (!Object.values(state).every(Number.isFinite)) {
+          setRunning(false);
+          status!.textContent = 'Numerical instability detected. Reset to restart.';
+          announcement!.textContent = status!.textContent;
+          break;
+        }
+        points.push(state);
+        if (points.length > 6000) points.shift();
+        time += parameters.dt;
+      }
+      if (now - lastReadout > 200) { updateReadout(); lastReadout = now; }
+    }
+    if (!document.hidden) renderTrajectory(canvas!, context!, points, state);
+    requestAnimationFrame(frame);
   }
-  function frame() {
-    if (running) { for(let i=0;i<8;i++){ state=step(state,parameters); if (!Object.values(state).every(Number.isFinite)) { running=false; status!.textContent='Numerical instability detected. Reset to restart.'; break; } points.push(state); if(points.length>7000)points.shift(); time+=parameters.dt; } if(running)status!.textContent=`Running · t = ${time.toFixed(1)}`; }
-    draw(); requestAnimationFrame(frame);
-  }
-  frame();
-  window.parent.postMessage({ type: 'simubox:ready', id: 'lorenz-attractor' }, '*');
+  setRunning(running);
+  requestAnimationFrame(frame);
 }
+window.addEventListener('message', event => {
+  if (event.source === window.parent && event.data?.type === 'simubox:ping') {
+    window.parent.postMessage({ type: 'simubox:ready', id: 'lorenz-attractor' }, '*');
+  }
+});
+window.parent.postMessage({ type: 'simubox:ready', id: 'lorenz-attractor' }, '*');

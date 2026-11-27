@@ -11,6 +11,9 @@ status: playable
 origin: first-party
 entryPoint: /lab/index.html
 preview:
+  image: /previews/lorenz.svg
+  caption: RK4 solution · x–z projection
+  alt: Computed Lorenz trajectory projected onto x and z.
   label: ∂x/∂t
 capabilities: [Canvas 2D]
 content: lorenz-attractor

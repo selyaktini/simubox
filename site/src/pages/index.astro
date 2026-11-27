@@ -1,7 +1,59 @@
 ---
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
+import Preview from '../components/Preview.astro';
 import { catalogue } from '../lib/data';
 import { categories } from '../lib/catalogue';
+
+const ordered = [...catalogue].sort((a, b) => Number(b.status === 'playable') - Number(a.status === 'playable'));
+const featured = ordered[0];
+const availableCategories = categories.filter(category => catalogue.some(item => item.category === category));
 ---
-<Base title="Explore science" description="Run scientific experiments, understand their models, and inspect their source code."><section class="hero shell"><div class="hero-copy"><span class="eyebrow">OPEN SCIENTIFIC LABORATORY / 001</span><h1>Science is easier to understand when you can <em>change the variables.</em></h1><p>Explore interactive models, examine their assumptions, and follow the source. SimuBox brings scientific experiments and explanations into one place.</p><div class="hero-actions"><a class="button" href="/simulations/">Explore simulations <span aria-hidden="true">↗</span></a><a class="text-link" href="/about/">How it works</a></div></div><div class="hero-figure" aria-label="Illustration of a Lorenz attractor"><svg viewBox="0 0 480 400" role="img" aria-label="Two looping trajectories representing a Lorenz attractor"><defs><linearGradient id="trace"><stop stop-color="#1a817f"/><stop offset="1" stop-color="#80e1d4"/></linearGradient></defs><path d="M244 212 C130 95 88 274 194 296 C333 333 300 113 190 121 C82 127 113 316 248 214 C382 100 426 275 308 296 C169 330 189 109 303 121 C412 131 386 304 244 212" fill="none" stroke="url(#trace)" stroke-width="2" opacity=".9"/><circle cx="244" cy="212" r="3" fill="#80e1d4"/></svg><div class="figure-caption"><span>FIG 01 / DYNAMICAL SYSTEMS</span><span>LORENZ SYSTEM · σ 10 · ρ 28 · β 8/3</span></div></div></section><section class="shell section"><div class="section-heading"><div><span class="eyebrow">THE COLLECTION</span><h2>Explore the experiments</h2></div><a class="text-link" href="/simulations/">View catalogue ↗</a></div><div class="card-grid">{catalogue.map(item => <Card item={item}/>)}</div></section><section class="shell section category-section"><span class="eyebrow">SCIENTIFIC FIELDS</span><h2>Find a field to investigate</h2><div class="category-list">{categories.filter(category => catalogue.some(item => item.category === category)).map(category => <a href={`/simulations/?category=${encodeURIComponent(category)}`}>{category} <span aria-hidden="true">↗</span></a>)}</div></section><section class="shell principle"><div><span class="eyebrow">A MODEL YOU CAN INSPECT</span><h2>Observe. Change. Understand.</h2></div><p>Each playable experiment connects controls to a documented scientific model. We show assumptions and limitations alongside source and attribution. External projects enter the catalogue as candidates until their integration is reviewed.</p><a class="text-link" href="/contribute/">Contribution process ↗</a></section></Base>
+<Base title="An atlas of scientific experiments">
+  <section class="home-intro site-shell" aria-labelledby="intro-title">
+    <div class="intro-copy">
+      <p class="section-index">SIMUBOX / OPEN LABORATORY</p>
+      <h1 id="intro-title">An atlas of models you can <em>test.</em></h1>
+      <p class="intro-lede">Change the variables. Watch the system respond. Read the equations and assumptions beside the experiment.</p>
+      <div class="intro-actions">
+        <a class="action-primary" href="/simulations/">Explore the collection <span aria-hidden="true">↗</span></a>
+        <a class="action-text" href={`/simulations/${featured.id}/`}>Open the Lorenz experiment <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="intro-footnote">One playable model. Two external projects under integration review.</p>
+    </div>
+    <div class="intro-figure">
+      <Preview item={featured} className="hero-preview" />
+      <div class="figure-note"><span>FIG. 01</span><span>Computed from the Lorenz equations · RK4, Δt = 0.005</span></div>
+    </div>
+  </section>
+
+  <section class="collection-section site-shell" aria-labelledby="collection-heading">
+    <div class="section-head">
+      <div><p class="section-index">THE COLLECTION / 003 ENTRIES</p><h2 id="collection-heading">Start with a model.</h2></div>
+      <a class="action-text" href="/simulations/">All experiments <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="collection-list">{ordered.map((item, index) => <Card item={item} index={index} />)}</div>
+  </section>
+
+  <section class="field-section site-shell" aria-labelledby="field-heading">
+    <div><p class="section-index">FIELD INDEX</p><h2 id="field-heading">Browse by discipline</h2></div>
+    <div class="field-index">
+      {availableCategories.map((category, index) => (
+        <a href={`/simulations/?category=${encodeURIComponent(category)}`}>
+          <span class="field-number">{String(index + 1).padStart(2, '0')}</span>
+          <span>{category}</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="provenance-section site-shell" aria-labelledby="provenance-heading">
+    <p class="section-index">OPEN NOTEBOOK</p>
+    <h2 id="provenance-heading">The model is part of the explanation.</h2>
+    <div>
+      <p>SimuBox places runnable experiments, scientific notes and source provenance together. External work remains a candidate until its build, license and browser behavior are reviewed.</p>
+      <a class="action-text" href="/about/">How the atlas works <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</Base>

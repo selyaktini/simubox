@@ -1,5 +1,34 @@
 ---
 import type { Manifest } from '../lib/catalogue';
-const { item } = Astro.props as { item: Manifest };
+import { scientificContent } from '../lib/data';
+import Preview from './Preview.astro';
+import { searchTextFor } from '../lib/filter';
+
+const { item, index, headingLevel = 3 } = Astro.props as { item: Manifest; index: number; headingLevel?: 2 | 3 };
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+const searchText = searchTextFor(item, scientificContent[item.content]);
 ---
-<article class="sim-card" data-title={item.title.toLowerCase()} data-category={item.category} data-search={[item.title,item.summary,item.category,...item.tags].join(' ').toLowerCase()}><div class="card-top"><span class="eyebrow">{item.category}</span><span class:list={['status', item.status === 'playable' ? 'status-live' : 'status-candidate']}>{item.status === 'playable' ? 'Playable' : 'External candidate'}</span></div><div class="card-visual" aria-hidden="true"><span>{item.preview.label}</span></div><h3><a href={`/simulations/${item.id}/`}>{item.title}</a></h3><p>{item.summary}</p><div class="tags">{item.tags.map(tag => <span>{tag}</span>)}</div></article>
+<article
+  class="collection-entry"
+  data-category={item.category}
+  data-status={item.status}
+  data-tags={item.tags.join('|')}
+  data-search={searchText}
+>
+  <div class="entry-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
+  <Preview item={item} className="entry-preview" />
+  <div class="entry-copy">
+    <div class="entry-kicker">
+      <span>{item.category}</span>
+      <span class:list={['status', item.status === 'playable' ? 'status-live' : 'status-candidate']}>
+        {item.status === 'playable' ? 'Playable here' : 'External candidate'}
+      </span>
+    </div>
+    <Heading><a href={`/simulations/${item.id}/`}>{item.title}</a></Heading>
+    <p>{item.summary}</p>
+    <div class="entry-foot">
+      <span>{item.authors.map(author => author.name).join(', ')}</span>
+      <span class="entry-arrow" aria-hidden="true">↗</span>
+    </div>
+  </div>
+</article>

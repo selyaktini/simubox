@@ -1,10 +1,16 @@
-## Scientific context
+## The mathematical object
 
-The Mandelbrot set consists of complex values c for which the sequence z₀ = 0 and zₙ₊₁ = zₙ² + c remains bounded. Its boundary has fine structure at many scales. Iteration counts can color points outside the set, but a finite computation cannot prove that a point belongs to it.
+The Mandelbrot set contains complex values $c$ for which the iteration below remains bounded:
+
+$$
+ z_0=0, \qquad z_{n+1}=z_n^2+c.
+$$
+
+The computed preview colors points by how quickly their orbit escapes beyond radius $2$, up to $80$ iterations. A finite run can identify escaping points, but it cannot prove that a point belongs to the set.
 
 ## Integration status
 
-This is an external candidate. Its source is available, but its build artifact and browser embedding have not been approved for SimuBox. Open the source repository to explore the existing project.
+Mandelbrot Odyssey is an external project by Yahya. Its source is linked here; the application is not playable within SimuBox. The build contains WebGL2 rendering and module workers whose behavior requires a separately reviewed hosting configuration.
 
 ## Reference
 
